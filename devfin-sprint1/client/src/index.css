@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-border: #334155;
+    --color-text: #f8fafc;
+    --color-muted: #94a3b8;
+    --color-brand: #22c55e;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-100 antialiased;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+}
