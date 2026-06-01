@@ -6,6 +6,7 @@ import { useTransactionStore } from '../../store/transaction.store'
 import TransactionItem from '../../components/transactions/TransactionItem'
 import MonthlyChart from '../../components/charts/MonthlyChart'
 import CategoryChart from '../../components/charts/CategoryChart'
+import DateRangeFilter from '../../components/charts/DateRangeFilter'
 
 export default function DashboardPage() {
   const { user } = useAuthStore()
@@ -44,13 +45,16 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-slate-100">
-          Good to see you, {user?.name?.split(' ')[0]} 👋
-        </h1>
-        <p className="text-sm text-slate-400 mt-0.5">
-          {summary?.month ?? 'This month'}
-        </p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-xl font-bold text-slate-100">
+            Good to see you, {user?.name?.split(' ')[0]} 👋
+          </h1>
+          <p className="text-sm text-slate-400 mt-0.5">
+            {summary?.month ?? 'This month'}
+          </p>
+        </div>
+        <DateRangeFilter />
       </div>
 
       {/* Summary cards */}
