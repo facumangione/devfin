@@ -1,46 +1,41 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../store/auth.store'
+import { useStatsStore } from '../../store/stats.store'
 import { useTransactionStore } from '../../store/transaction.store'
 import TransactionItem from '../../components/transactions/TransactionItem'
+import MonthlyChart from '../../components/charts/MonthlyChart'
+import CategoryChart from '../../components/charts/CategoryChart'
 
 export default function DashboardPage() {
   const { user } = useAuthStore()
+  const { summary, monthly, byCategory, isLoading, fetchStats } = useStatsStore()
   const { transactions, fetchTransactions, fetchCategories } = useTransactionStore()
 
   useEffect(() => {
+    fetchStats()
     fetchCategories()
     fetchTransactions({ limit: 5, page: 1 })
   }, [])
 
-  const income = transactions
-    .filter((t) => t.type === 'INCOME')
-    .reduce((sum, t) => sum + parseFloat(t.amount), 0)
-
-  const expenses = transactions
-    .filter((t) => t.type === 'EXPENSE')
-    .reduce((sum, t) => sum + parseFloat(t.amount), 0)
-
-  const balance = income - expenses
-
   const cards = [
     {
       label: 'Balance',
-      value: balance,
-      color: balance >= 0 ? 'text-green-400' : 'text-red-400',
-      bg: balance >= 0 ? 'bg-green-500/10' : 'bg-red-500/10',
+      value: summary?.balance ?? 0,
+      color: (summary?.balance ?? 0) >= 0 ? 'text-green-400' : 'text-red-400',
+      bg: (summary?.balance ?? 0) >= 0 ? 'bg-green-500/10' : 'bg-red-500/10',
       icon: '⚖️',
     },
     {
       label: 'Income',
-      value: income,
+      value: summary?.income ?? 0,
       color: 'text-green-400',
       bg: 'bg-green-500/10',
       icon: '↑',
     },
     {
       label: 'Expenses',
-      value: expenses,
+      value: summary?.expenses ?? 0,
       color: 'text-red-400',
       bg: 'bg-red-500/10',
       icon: '↓',
@@ -53,10 +48,13 @@ export default function DashboardPage() {
         <h1 className="text-xl font-bold text-slate-100">
           Good to see you, {user?.name?.split(' ')[0]} 👋
         </h1>
-        <p className="text-sm text-slate-400 mt-0.5">Here's your financial summary</p>
+        <p className="text-sm text-slate-400 mt-0.5">
+          {summary?.month ?? 'This month'}
+        </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      {/* Summary cards */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
         {cards.map((card) => (
           <div key={card.label} className="bg-slate-900 border border-slate-800 rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
@@ -66,12 +64,19 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className={`text-2xl font-bold ${card.color}`}>
-              ${Math.abs(card.value).toFixed(2)}
+              {isLoading ? '—' : `$${Math.abs(card.value).toFixed(2)}`}
             </p>
           </div>
         ))}
       </div>
 
+      {/* Charts */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <MonthlyChart data={monthly} />
+        <CategoryChart data={byCategory} />
+      </div>
+
+      {/* Recent transactions */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-slate-100">Recent transactions</h2>
