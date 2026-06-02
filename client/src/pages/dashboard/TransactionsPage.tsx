@@ -4,7 +4,6 @@ import { Transaction, TransactionFilters } from '../../types/transaction.types'
 import TransactionItem from '../../components/transactions/TransactionItem'
 import TransactionForm from '../../components/transactions/TransactionForm'
 import TransactionFiltersBar from '../../components/transactions/TransactionFilters'
-import { api } from '../../lib/api'
 
 export default function TransactionsPage() {
   const {
@@ -73,7 +72,6 @@ export default function TransactionsPage() {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold text-slate-100">Transactions</h1>
@@ -96,12 +94,10 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="mb-4">
         <TransactionFiltersBar onFilterChange={handleFilterChange} />
       </div>
 
-      {/* List */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
@@ -131,7 +127,6 @@ export default function TransactionsPage() {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-4">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -150,7 +145,6 @@ export default function TransactionsPage() {
         </div>
       )}
 
-      {/* Form modal */}
       {showForm && (
         <TransactionForm
           transaction={editingTransaction}
