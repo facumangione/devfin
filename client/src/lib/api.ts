@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios'
 
+const BASE_URL = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL) || 'http://localhost:3001/api'
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
-  withCredentials: true,
+  baseURL: BASE_URL,
+  withCredentials: false,
 })
 
 // Attach access token to every request
@@ -28,7 +31,7 @@ api.interceptors.response.use(
         if (!refreshToken) throw new Error('No refresh token')
 
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/auth/refresh`,
+          `${BASE_URL}/auth/refresh`,
           { refreshToken }
         )
 
