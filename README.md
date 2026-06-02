@@ -2,7 +2,7 @@
 
 Personal finance tracker built with React, Node.js, and PostgreSQL. Track income and expenses, visualize spending patterns, and stay on top of your monthly balance.
 
-> 🚧 **Active development** — see [CHANGELOG](./CHANGELOG.md) for progress.
+>**Active development** — see [CHANGELOG](./CHANGELOG.md) for progress.
 
 ## Features
 
