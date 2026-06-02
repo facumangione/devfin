@@ -4,6 +4,7 @@ import { Transaction, TransactionFilters } from '../../types/transaction.types'
 import TransactionItem from '../../components/transactions/TransactionItem'
 import TransactionForm from '../../components/transactions/TransactionForm'
 import TransactionFiltersBar from '../../components/transactions/TransactionFilters'
+import { api } from '../../lib/api'
 
 export default function TransactionsPage() {
   const {
@@ -12,20 +13,22 @@ export default function TransactionsPage() {
     totalPages,
     currentPage,
     isLoading,
+    filters,
     fetchTransactions,
     fetchCategories,
   } = useTransactionStore()
 
   const [showForm, setShowForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [isExporting, setIsExporting] = useState(false)
 
   useEffect(() => {
     fetchCategories()
     fetchTransactions()
   }, [])
 
-  const handleFilterChange = (filters: TransactionFilters) => {
-    fetchTransactions(filters)
+  const handleFilterChange = (newFilters: TransactionFilters) => {
+    fetchTransactions(newFilters)
   }
 
   const handleEdit = (transaction: Transaction) => {
@@ -39,7 +42,33 @@ export default function TransactionsPage() {
   }
 
   const handlePageChange = (page: number) => {
-    fetchTransactions({ page })
+    fetchTransactions({ ...filters, page })
+  }
+
+  const handleExport = async () => {
+    setIsExporting(true)
+    try {
+      const params = new URLSearchParams()
+      if (filters.type) params.append('type', filters.type)
+      if (filters.from) params.append('from', filters.from)
+      if (filters.to) params.append('to', filters.to)
+
+      const token = localStorage.getItem('accessToken')
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/export/transactions?${params.toString()}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `devfin-transactions-${new Date().toISOString().slice(0, 10)}.csv`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   return (
@@ -50,12 +79,21 @@ export default function TransactionsPage() {
           <h1 className="text-xl font-bold text-slate-100">Transactions</h1>
           <p className="text-sm text-slate-400 mt-0.5">{total} total</p>
         </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-green-500 hover:bg-green-400 text-slate-950 font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
-        >
-          + Add transaction
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            disabled={isExporting || transactions.length === 0}
+            className="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          >
+            {isExporting ? 'Exporting...' : '↓ Export CSV'}
+          </button>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-green-500 hover:bg-green-400 text-slate-950 font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
+          >
+            + Add transaction
+          </button>
+        </div>
       </div>
 
       {/* Filters */}

@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes'
 import transactionRoutes from './routes/transaction.routes'
 import categoryRoutes from './routes/category.routes'
 import statsRoutes from './routes/stats.routes'
+import exportRoutes from './routes/export.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/transactions', transactionRoutes)
 app.use('/api/categories', categoryRoutes)
 app.use('/api/stats', statsRoutes)
+app.use('/api/export', exportRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => {
