@@ -3,27 +3,48 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --color-bg: #0f172a;
-    --color-surface: #1e293b;
-    --color-border: #334155;
-    --color-text: #f8fafc;
-    --color-muted: #94a3b8;
-    --color-brand: #22c55e;
-  }
-
   * {
     box-sizing: border-box;
   }
 
   body {
-    @apply bg-slate-950 text-slate-100 antialiased;
+    @apply antialiased;
+    background: linear-gradient(160deg, #fdf4f0 0%, #f0ebfb 50%, #eaf4f2 100%);
+    min-height: 100vh;
+    transition: background 0.3s ease;
+  }
+
+  body.dark {
+    background: linear-gradient(160deg, #2a2438 0%, #1f2438 50%, #1a2b2a 100%);
   }
 }
 
 @layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .dark .glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+  }
+
+  .dark .glass-strong {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #334155 transparent;
   }
 }
