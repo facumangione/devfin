@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6 pt-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 pt-2">
         <div>
           <h1 className="text-xl font-semibold text-lavender-800 dark:text-white">
             Hola, {user?.name?.split(' ')[0]} 👋
@@ -39,7 +39,7 @@ export default function DashboardPage() {
         <DateRangeFilter />
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {cards.map((card) => (
           <div key={card.label} className="glass rounded-2xl p-5">
             <div className="flex items-center justify-between mb-3">
@@ -53,11 +53,11 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="glass rounded-2xl p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div className="glass rounded-2xl p-5 overflow-x-auto">
           <MonthlyChart data={monthly} />
         </div>
-        <div className="glass rounded-2xl p-5">
+        <div className="glass rounded-2xl p-5 overflow-x-auto">
           <CategoryChart data={byCategory} />
         </div>
       </div>
