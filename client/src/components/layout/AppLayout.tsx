@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuthStore } from '../../store/auth.store'
 import { useThemeStore } from '../../store/theme.store'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ export default function AppLayout() {
   const { user, logout } = useAuthStore()
   const { isDark } = useThemeStore()
   const navigate = useNavigate()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     document.body.classList.toggle('dark', isDark)
@@ -25,19 +26,62 @@ export default function AppLayout() {
     navigate('/login')
   }
 
+  const handleNavClick = () => setMobileOpen(false)
+
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-60 fixed h-full py-6 px-4 flex flex-col">
+    <div className="min-h-screen md:flex">
+      {/* Mobile top bar */}
+      <div className="md:hidden sticky top-0 z-30 px-4 pt-4">
+        <div className="glass-strong rounded-2xl px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="text-lavender-700 dark:text-white text-xl leading-none"
+            aria-label="Abrir menú"
+          >
+            ☰
+          </button>
+          <div className="flex items-center gap-2">
+            <img src="/favicon.svg" alt="DevFin" className="w-7 h-7 rounded-lg" />
+            <span className="font-semibold text-lavender-800 dark:text-white text-sm">DevFin</span>
+          </div>
+          <ThemeToggle />
+        </div>
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — fixed on desktop, slide-in drawer on mobile */}
+      <aside
+        className={cn(
+          'fixed h-full py-6 px-4 flex flex-col z-50 transition-transform duration-300 w-60',
+          'md:translate-x-0',
+          mobileOpen ? 'translate-x-0' : '-translate-x-[120%]'
+        )}
+      >
         <div className="glass-strong rounded-2xl p-4 flex-1 flex flex-col">
-          <div className="flex items-center gap-2 px-1 mb-8">
-            <img src="/favicon.svg" alt="DevFin" className="w-9 h-9 rounded-xl" />
-            <div>
-              <span className="font-semibold text-lavender-800 dark:text-white text-sm block leading-tight">
-                Estudio Contable
-              </span>
-              <span className="text-[10px] text-lavender-400 dark:text-lavender-200/70">DevFin</span>
+          <div className="flex items-center justify-between gap-2 px-1 mb-8">
+            <div className="flex items-center gap-2">
+              <img src="/favicon.svg" alt="DevFin" className="w-9 h-9 rounded-xl" />
+              <div>
+                <span className="font-semibold text-lavender-800 dark:text-white text-sm block leading-tight">
+                  Estudio Contable
+                </span>
+                <span className="text-[10px] text-lavender-400 dark:text-lavender-200/70">DevFin</span>
+              </div>
             </div>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden text-lavender-400 dark:text-lavender-200/70 text-lg leading-none"
+              aria-label="Cerrar menú"
+            >
+              ✕
+            </button>
           </div>
 
           <nav className="flex-1 space-y-1">
@@ -45,6 +89,7 @@ export default function AppLayout() {
               <NavLink
                 key={item.to}
                 to={item.to}
+                onClick={handleNavClick}
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors',
@@ -76,11 +121,12 @@ export default function AppLayout() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 ml-60">
-        <header className="sticky top-0 z-10 px-8 pt-6 pb-2 flex justify-end">
+      <div className="flex-1 md:ml-60">
+        {/* Desktop header with theme toggle */}
+        <header className="hidden md:flex sticky top-0 z-10 px-8 pt-6 pb-2 justify-end">
           <ThemeToggle />
         </header>
-        <main className="px-8 pb-8 -mt-6">
+        <main className="px-4 pb-8 pt-4 md:px-8 md:pt-0 md:-mt-6">
           <Outlet />
         </main>
       </div>
