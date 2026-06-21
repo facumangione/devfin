@@ -20,86 +20,67 @@ export default function DashboardPage() {
   }, [])
 
   const cards = [
-    {
-      label: 'Balance',
-      value: summary?.balance ?? 0,
-      color: (summary?.balance ?? 0) >= 0 ? 'text-green-400' : 'text-red-400',
-      bg: (summary?.balance ?? 0) >= 0 ? 'bg-green-500/10' : 'bg-red-500/10',
-      icon: '⚖️',
-    },
-    {
-      label: 'Income',
-      value: summary?.income ?? 0,
-      color: 'text-green-400',
-      bg: 'bg-green-500/10',
-      icon: '↑',
-    },
-    {
-      label: 'Expenses',
-      value: summary?.expenses ?? 0,
-      color: 'text-red-400',
-      bg: 'bg-red-500/10',
-      icon: '↓',
-    },
+    { label: 'Balance', value: summary?.balance ?? 0, icon: '⚖️', positive: (summary?.balance ?? 0) >= 0 },
+    { label: 'Ingresos', value: summary?.income ?? 0, icon: '↑', positive: true },
+    { label: 'Egresos', value: summary?.expenses ?? 0, icon: '↓', positive: false },
   ]
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 pt-2">
         <div>
-          <h1 className="text-xl font-bold text-slate-100">
-            Good to see you, {user?.name?.split(' ')[0]} 👋
+          <h1 className="text-xl font-semibold text-lavender-800 dark:text-white">
+            Hola, {user?.name?.split(' ')[0]} 👋
           </h1>
-          <p className="text-sm text-slate-400 mt-0.5">
-            {summary?.month ?? 'This month'}
+          <p className="text-sm text-lavender-400 dark:text-lavender-200/60 mt-0.5">
+            {summary?.month ?? 'Este mes'}
           </p>
         </div>
         <DateRangeFilter />
       </div>
 
-      {/* Summary cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {cards.map((card) => (
-          <div key={card.label} className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div key={card.label} className="glass rounded-2xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm text-slate-400">{card.label}</p>
-              <div className={`w-8 h-8 rounded-lg ${card.bg} flex items-center justify-center text-sm`}>
-                {card.icon}
-              </div>
+              <p className="text-sm text-lavender-400 dark:text-lavender-200/70">{card.label}</p>
+              <span className="text-lg">{card.icon}</span>
             </div>
-            <p className={`text-2xl font-bold ${card.color}`}>
-              {isLoading ? '—' : `$${Math.abs(card.value).toFixed(2)}`}
+            <p className={`text-2xl font-semibold ${card.positive ? 'text-mint-400 dark:text-emerald-300' : 'text-peach-400 dark:text-rose-300'}`}>
+              {isLoading ? '—' : `$${Math.abs(card.value).toLocaleString('es-AR')}`}
             </p>
           </div>
         ))}
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <MonthlyChart data={monthly} />
-        <CategoryChart data={byCategory} />
+        <div className="glass rounded-2xl p-5">
+          <MonthlyChart data={monthly} />
+        </div>
+        <div className="glass rounded-2xl p-5">
+          <CategoryChart data={byCategory} />
+        </div>
       </div>
 
-      {/* Recent transactions */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-slate-100">Recent transactions</h2>
-          <Link to="/transactions" className="text-sm text-green-400 hover:text-green-300 transition-colors">
-            View all →
+          <h2 className="font-semibold text-lavender-800 dark:text-white text-sm">Movimientos recientes</h2>
+          <Link to="/transactions" className="text-sm text-lavender-400 dark:text-lavender-200 hover:text-lavender-600 dark:hover:text-white transition-colors">
+            Ver todos →
           </Link>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="glass rounded-2xl overflow-hidden">
           {transactions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-3xl mb-3">💸</p>
-              <p className="text-slate-400 text-sm">No transactions yet</p>
-              <Link to="/transactions" className="mt-3 inline-block text-green-400 hover:text-green-300 text-sm font-medium">
-                Add your first one →
+              <p className="text-3xl mb-3">🧾</p>
+              <p className="text-lavender-400 dark:text-lavender-200/70 text-sm">Todavía no hay movimientos</p>
+              <Link to="/transactions" className="mt-3 inline-block text-lavender-600 dark:text-lavender-200 hover:underline text-sm font-medium">
+                Agregar el primero →
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-slate-800/50">
+            <div className="divide-y divide-white/40 dark:divide-white/5">
               {transactions.map((transaction) => (
                 <TransactionItem key={transaction.id} transaction={transaction} onEdit={() => {}} />
               ))}
