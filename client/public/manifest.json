@@ -1,0 +1,13 @@
+{
+  "name": "DevFin - Estudio Contable",
+  "short_name": "DevFin",
+  "description": "Gestión de gastos e ingresos para estudio contable",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#a78bd8",
+  "background_color": "#f0ebfb",
+  "display": "standalone",
+  "start_url": "/"
+}
