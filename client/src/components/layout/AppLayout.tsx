@@ -9,6 +9,7 @@ import ThemeToggle from './ThemeToggle'
 const navItems = [
   { to: '/dashboard', icon: '🏠', label: 'Inicio' },
   { to: '/transactions', icon: '🧾', label: 'Movimientos' },
+  { to: '/recurring', icon: '🔄', label: 'Recurrentes' },
 ]
 
 export default function AppLayout() {
@@ -42,7 +43,7 @@ export default function AppLayout() {
           </button>
           <div className="flex items-center gap-2">
             <img src="/favicon.svg" alt="DevFin" className="w-7 h-7 rounded-lg" />
-            <span className="font-semibold text-lavender-800 dark:text-white text-sm">DevFin</span>
+            <span className="font-semibold text-lavender-800 dark:text-white text-sm">Registro de Wallet</span>
           </div>
           <ThemeToggle />
         </div>
@@ -56,7 +57,7 @@ export default function AppLayout() {
         />
       )}
 
-      {/* Sidebar — fixed on desktop, slide-in drawer on mobile */}
+      {/* Sidebar */}
       <aside
         className={cn(
           'fixed h-full py-6 px-4 flex flex-col z-50 transition-transform duration-300 w-60',
@@ -70,7 +71,7 @@ export default function AppLayout() {
               <img src="/favicon.svg" alt="DevFin" className="w-9 h-9 rounded-xl" />
               <div>
                 <span className="font-semibold text-lavender-800 dark:text-white text-sm block leading-tight">
-                  Estudio Contable
+                  Registro de Wallet
                 </span>
                 <span className="text-[10px] text-lavender-400 dark:text-lavender-200/70">DevFin</span>
               </div>
@@ -78,10 +79,7 @@ export default function AppLayout() {
             <button
               onClick={() => setMobileOpen(false)}
               className="md:hidden text-lavender-400 dark:text-lavender-200/70 text-lg leading-none"
-              aria-label="Cerrar menú"
-            >
-              ✕
-            </button>
+            >✕</button>
           </div>
 
           <nav className="flex-1 space-y-1">
@@ -120,9 +118,7 @@ export default function AppLayout() {
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 md:ml-60">
-        {/* Desktop header with theme toggle */}
         <header className="hidden md:flex sticky top-0 z-10 px-8 pt-6 pb-2 justify-end">
           <ThemeToggle />
         </header>

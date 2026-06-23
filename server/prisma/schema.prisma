@@ -12,15 +12,16 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(cuid())
-  email        String         @unique
+  id           String   @id @default(cuid())
+  email        String   @unique
   name         String
   passwordHash String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  refreshTokens RefreshToken[]
-  transactions  Transaction[]
+  refreshTokens     RefreshToken[]
+  transactions      Transaction[]
+  recurringPayments RecurringPayment[]
 
   @@map("users")
 }
@@ -38,14 +39,15 @@ model RefreshToken {
 }
 
 model Category {
-  id           String        @id @default(cuid())
-  name         String        @unique
-  icon         String
-  color        String
-  type         CategoryType
-  createdAt    DateTime      @default(now())
+  id        String       @id @default(cuid())
+  name      String       @unique
+  icon      String
+  color     String
+  type      CategoryType
+  createdAt DateTime     @default(now())
 
-  transactions Transaction[]
+  transactions      Transaction[]
+  recurringPayments RecurringPayment[]
 
   @@map("categories")
 }
@@ -66,6 +68,27 @@ model Transaction {
   category Category @relation(fields: [categoryId], references: [id])
 
   @@map("transactions")
+}
+
+model RecurringPayment {
+  id            String          @id @default(cuid())
+  description   String
+  amount        Decimal         @db.Decimal(10, 2)
+  type          TransactionType
+  totalInstallments Int?        // null = indefinido
+  paidInstallments  Int         @default(0)
+  nextDueDate   DateTime
+  active        Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  userId     String
+  categoryId String
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("recurring_payments")
 }
 
 enum TransactionType {
