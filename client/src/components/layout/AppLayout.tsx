@@ -70,7 +70,7 @@ export default function AppLayout() {
               <img src="/favicon.svg" alt="DevFin" className="w-9 h-9 rounded-xl" />
               <div>
                 <span className="font-semibold text-lavender-800 dark:text-white text-sm block leading-tight">
-                  Estudio Contable
+                  Registro de Wallet
                 </span>
                 <span className="text-[10px] text-lavender-400 dark:text-lavender-200/70">DevFin</span>
               </div>
