@@ -12,7 +12,10 @@ const schema = z.object({
   amount: z.coerce.number().positive('El monto debe ser mayor a 0'),
   type: z.enum(['INCOME', 'EXPENSE']),
   categoryId: z.string().min(1, 'Elegí una categoría'),
-  totalInstallments: z.coerce.number().int().positive().optional().nullable(),
+  totalInstallments: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? null : Number(v)),
+    z.number().int().positive().nullable()
+  ),
   nextDueDate: z.string().min(1, 'La fecha es obligatoria'),
 })
 
