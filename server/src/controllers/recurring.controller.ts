@@ -39,6 +39,17 @@ export async function createRecurringPayment(req: AuthRequest, res: Response): P
 
   const { amount, description, type, categoryId, totalInstallments, nextDueDate } = result.data
 
+  const startDate = new Date(nextDueDate)
+  const installments = totalInstallments ?? null
+
+  // Calculate final nextDueDate (after all installments if finite, or same date if indefinite)
+  let finalNextDueDate = new Date(startDate)
+  if (installments) {
+    finalNextDueDate = new Date(startDate)
+    finalNextDueDate.setMonth(finalNextDueDate.getMonth() + installments)
+  }
+
+  // Create the recurring payment record
   const payment = await prisma.recurringPayment.create({
     data: {
       description,
@@ -46,11 +57,35 @@ export async function createRecurringPayment(req: AuthRequest, res: Response): P
       type,
       categoryId,
       userId,
-      totalInstallments: totalInstallments ?? null,
-      nextDueDate: new Date(nextDueDate),
+      totalInstallments: installments,
+      paidInstallments: installments ?? 0,
+      nextDueDate: finalNextDueDate,
+      active: installments ? false : true, // if finite, mark as completed; if indefinite, keep active
     },
     include: { category: true },
   })
+
+  // Generate all transactions immediately
+  const transactionsToCreate = []
+  const count = installments ?? 1 // for indefinite, create 1 future transaction
+
+  for (let i = 0; i < count; i++) {
+    const txDate = new Date(startDate)
+    txDate.setMonth(txDate.getMonth() + i)
+
+    transactionsToCreate.push({
+      amount,
+      description: installments
+        ? `${description} (cuota ${i + 1}/${installments})`
+        : description,
+      type,
+      date: txDate,
+      userId,
+      categoryId,
+    })
+  }
+
+  await prisma.transaction.createMany({ data: transactionsToCreate })
 
   res.status(201).json({ data: payment })
 }

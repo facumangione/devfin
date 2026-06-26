@@ -48,7 +48,7 @@ export const useStatsStore = create<StatsState>((set) => ({
       const [monthlyRes, categoryRes, summaryRes] = await Promise.all([
         api.get(`/stats/monthly${query}`),
         api.get(`/stats/by-category${query}`),
-        api.get('/stats/summary'),
+        api.get(`/stats/summary${query}`),
       ])
 
       set({

@@ -41,9 +41,14 @@ export default function TransactionItem({ transaction, onEdit }: Props) {
         <p className="text-sm font-medium text-slate-100 truncate">
           {transaction.description}
         </p>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-xs text-lavender-400 dark:text-lavender-200/60 mt-0.5">
           {transaction.category.name} · {date}
-        </p>
+          {(transaction as any).status === 'pending' && (
+            <span className="ml-2 text-[10px] bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 px-1.5 py-0.5 rounded-full font-medium">
+            Programado
+            </span>
+        )}
+      </p>
       </div>
 
       {/* Amount */}

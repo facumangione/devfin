@@ -104,17 +104,23 @@ export async function createTransaction(req: AuthRequest, res: Response): Promis
     return
   }
 
-  const transaction = await prisma.transaction.create({
-    data: {
-      amount,
-      description,
-      type,
-      date: new Date(date),
-      categoryId,
-      userId,
-    },
-    include: { category: true },
-  })
+const txDate = new Date(date)
+const isPending = txDate > new Date()
+
+const transaction = await prisma.transaction.create({
+  data: {
+    amount,
+    description,
+    type,
+    date: txDate,
+    status: isPending ? 'pending' : 'confirmed',
+    categoryId,
+    userId,
+  },
+  include: {
+    category: true,
+  },
+})
 
   res.status(201).json({ data: transaction })
 }

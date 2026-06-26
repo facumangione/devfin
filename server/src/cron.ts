@@ -4,69 +4,81 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function processRecurringPayments() {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const now = new Date()
 
-  const duePayments = await prisma.recurringPayment.findMany({
-    where: {
-      active: true,
-      nextDueDate: { lte: new Date() },
-    },
-  })
+  // Keep processing until all past-due installments are caught up
+  let processed = 0
+  let keepGoing = true
 
-  console.log(`🔄 Processing ${duePayments.length} due recurring payments...`)
+  while (keepGoing) {
+    const duePayments = await prisma.recurringPayment.findMany({
+      where: {
+        active: true,
+        nextDueDate: { lte: now },
+      },
+    })
 
-  for (const payment of duePayments) {
-    // Check if completed
-    if (
-      payment.totalInstallments !== null &&
-      payment.paidInstallments >= payment.totalInstallments
-    ) {
-      await prisma.recurringPayment.update({
-        where: { id: payment.id },
-        data: { active: false },
-      })
-      console.log(`✅ Completed: ${payment.description}`)
-      continue
+    if (duePayments.length === 0) {
+      keepGoing = false
+      break
     }
 
-    // Create transaction
-    await prisma.transaction.create({
-      data: {
-        amount: payment.amount,
-        description: payment.totalInstallments
-          ? `${payment.description} (cuota ${payment.paidInstallments + 1}/${payment.totalInstallments})`
-          : payment.description,
-        type: payment.type,
-        date: new Date(),
-        userId: payment.userId,
-        categoryId: payment.categoryId,
-      },
-    })
+    console.log(`🔄 Processing ${duePayments.length} due recurring payments...`)
 
-    // Calculate next due date (add 1 month)
-    const next = new Date(payment.nextDueDate)
-    next.setMonth(next.getMonth() + 1)
+    for (const payment of duePayments) {
+      // Check if completed
+      if (
+        payment.totalInstallments !== null &&
+        payment.paidInstallments >= payment.totalInstallments
+      ) {
+        await prisma.recurringPayment.update({
+          where: { id: payment.id },
+          data: { active: false },
+        })
+        console.log(`✅ Completed: ${payment.description}`)
+        continue
+      }
 
-    const newPaid = payment.paidInstallments + 1
-    const isCompleted =
-      payment.totalInstallments !== null && newPaid >= payment.totalInstallments
+      const installmentDate = new Date(payment.nextDueDate)
+      const newPaid = payment.paidInstallments + 1
+      const isCompleted =
+        payment.totalInstallments !== null && newPaid >= payment.totalInstallments
 
-    await prisma.recurringPayment.update({
-      where: { id: payment.id },
-      data: {
-        paidInstallments: newPaid,
-        nextDueDate: next,
-        active: !isCompleted,
-      },
-    })
+      // Create transaction with the exact due date of this installment
+      await prisma.transaction.create({
+        data: {
+          amount: payment.amount,
+          description: payment.totalInstallments
+            ? `${payment.description} (cuota ${newPaid}/${payment.totalInstallments})`
+            : payment.description,
+          type: payment.type,
+          date: installmentDate,
+          userId: payment.userId,
+          categoryId: payment.categoryId,
+        },
+      })
 
-    console.log(
-      `💸 Generated: ${payment.description} — $${payment.amount} (cuota ${newPaid}${payment.totalInstallments ? `/${payment.totalInstallments}` : ''})`
-    )
+      // Advance to next month
+      const next = new Date(installmentDate)
+      next.setMonth(next.getMonth() + 1)
+
+      await prisma.recurringPayment.update({
+        where: { id: payment.id },
+        data: {
+          paidInstallments: newPaid,
+          nextDueDate: next,
+          active: !isCompleted,
+        },
+      })
+
+      processed++
+      console.log(
+        `💸 ${payment.description} — cuota ${newPaid}${payment.totalInstallments ? `/${payment.totalInstallments}` : ''} — fecha: ${installmentDate.toLocaleDateString('es-AR')}`
+      )
+    }
   }
 
-  console.log('✅ Done')
+  console.log(`✅ Done — ${processed} transactions generated`)
   await prisma.$disconnect()
 }
 

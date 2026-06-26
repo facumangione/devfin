@@ -19,11 +19,21 @@ export async function getMonthlyStats(req: AuthRequest, res: Response): Promise<
 
   const { from, to } = result.data
 
-  const fromDate = from ? new Date(from) : new Date(new Date().setMonth(new Date().getMonth() - 5))
+  // Find oldest transaction to set default start date
+  const oldest = await prisma.transaction.findFirst({
+    where: { userId },
+    orderBy: { date: 'asc' },
+    select: { date: true },
+  })
+
+  const fromDate = from
+    ? new Date(from)
+    : oldest
+    ? new Date(oldest.date.getFullYear(), oldest.date.getMonth(), 1)
+    : new Date(new Date().getFullYear(), 0, 1)
+
   const toDate = to ? new Date(to) : new Date()
 
-  // Set to start/end of day
-  fromDate.setDate(1)
   fromDate.setHours(0, 0, 0, 0)
   toDate.setHours(23, 59, 59, 999)
 
@@ -40,13 +50,12 @@ export async function getMonthlyStats(req: AuthRequest, res: Response): Promise<
     orderBy: { date: 'asc' },
   })
 
-  // Group by month
   const monthlyMap: Record<string, { month: string; income: number; expenses: number }> = {}
 
   for (const tx of transactions) {
     const date = new Date(tx.date)
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-    const label = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`
+    const label = `${date.toLocaleString('es-AR', { month: 'short', timeZone: 'UTC' })} ${date.getUTCFullYear()}`
 
     if (!monthlyMap[key]) {
       monthlyMap[key] = { month: label, income: 0, expenses: 0 }
@@ -63,9 +72,9 @@ export async function getMonthlyStats(req: AuthRequest, res: Response): Promise<
   // Fill missing months in range
   const current = new Date(fromDate)
   while (current <= toDate) {
-    const key = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`
+    const key = `${current.getUTCFullYear()}-${String(current.getUTCMonth() + 1).padStart(2, '0')}`
     if (!monthlyMap[key]) {
-      const label = current.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+      const label = `${current.toLocaleString('es-AR', { month: 'short', timeZone: 'UTC' })} ${current.getUTCFullYear()}`
       monthlyMap[key] = { month: label, income: 0, expenses: 0 }
     }
     current.setMonth(current.getMonth() + 1)
@@ -94,10 +103,21 @@ export async function getCategoryStats(req: AuthRequest, res: Response): Promise
 
   const { from, to } = result.data
 
+  const oldest = await prisma.transaction.findFirst({
+    where: { userId },
+    orderBy: { date: 'asc' },
+    select: { date: true },
+  })
+
   const fromDate = from
     ? new Date(from)
-    : new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-  const toDate = to ? new Date(to) : new Date()
+    : oldest
+    ? new Date(oldest.date.getFullYear(), oldest.date.getMonth(), 1)
+    : new Date(new Date().getFullYear(), 0, 1)
+
+  const today = new Date()
+  today.setHours(23, 59, 59, 999)
+  const toDate = to ? new Date(to) : today
 
   fromDate.setHours(0, 0, 0, 0)
   toDate.setHours(23, 59, 59, 999)
@@ -133,16 +153,37 @@ export async function getCategoryStats(req: AuthRequest, res: Response): Promise
 
 export async function getSummary(req: AuthRequest, res: Response): Promise<void> {
   const userId = req.user!.userId
+  const result = dateRangeSchema.safeParse(req.query)
 
-  const now = new Date()
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-  startOfMonth.setHours(0, 0, 0, 0)
-  now.setHours(23, 59, 59, 999)
+  if (!result.success) {
+    res.status(400).json({ error: result.error.errors[0].message })
+    return
+  }
+
+  const { from, to } = result.data
+
+  const oldest = await prisma.transaction.findFirst({
+    where: { userId },
+    orderBy: { date: 'asc' },
+    select: { date: true },
+  })
+
+  const fromDate = from
+    ? new Date(from)
+    : oldest
+    ? new Date(oldest.date.getUTCFullYear(), oldest.date.getUTCMonth(), 1)
+    : new Date(new Date().getFullYear(), 0, 1)
+
+  const toDate = to ? new Date(to) : new Date()
+
+  fromDate.setHours(0, 0, 0, 0)
+  toDate.setHours(23, 59, 59, 999)
 
   const transactions = await prisma.transaction.findMany({
     where: {
       userId,
-      date: { gte: startOfMonth, lte: now },
+      date: { gte: fromDate, lte: toDate },
+      status: 'confirmed',
     },
     select: { amount: true, type: true },
   })
@@ -160,7 +201,7 @@ export async function getSummary(req: AuthRequest, res: Response): Promise<void>
       income: parseFloat(income.toFixed(2)),
       expenses: parseFloat(expenses.toFixed(2)),
       balance: parseFloat((income - expenses).toFixed(2)),
-      month: now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+      month: 'Todo el historial',
     },
   })
 }
