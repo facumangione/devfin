@@ -135,3 +135,53 @@ export async function me(req: Request, res: Response): Promise<void> {
 
   res.json({ user })
 }
+
+export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
+  const userId = req.user!.userId
+  const { name } = req.body
+
+  if (!name || name.trim().length < 2) {
+    res.status(400).json({ error: 'El nombre debe tener al menos 2 caracteres' })
+    return
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { name: name.trim() },
+    select: { id: true, name: true, email: true },
+  })
+
+  res.json({ user })
+}
+
+export async function updatePassword(req: AuthRequest, res: Response): Promise<void> {
+  const userId = req.user!.userId
+  const { currentPassword, newPassword } = req.body
+
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: 'Completá todos los campos' })
+    return
+  }
+
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: 'La nueva contraseña debe tener al menos 8 caracteres' })
+    return
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) {
+    res.status(404).json({ error: 'Usuario no encontrado' })
+    return
+  }
+
+  const isValid = await bcrypt.compare(currentPassword, user.passwordHash)
+  if (!isValid) {
+    res.status(401).json({ error: 'La contraseña actual es incorrecta' })
+    return
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12)
+  await prisma.user.update({ where: { id: userId }, data: { passwordHash } })
+
+  res.json({ message: 'Contraseña actualizada correctamente' })
+}

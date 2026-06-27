@@ -11,3 +11,8 @@ router.post('/logout', logout)
 router.get('/me', authenticate, me)
 
 export default router
+
+import { updateProfile, updatePassword } from '../controllers/auth.controller'
+
+router.patch('/profile', authenticate, updateProfile)
+router.patch('/password', authenticate, updatePassword)

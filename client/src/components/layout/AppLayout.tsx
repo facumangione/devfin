@@ -10,6 +10,7 @@ const navItems = [
   { to: '/dashboard', icon: '🏠', label: 'Inicio' },
   { to: '/transactions', icon: '🧾', label: 'Movimientos' },
   { to: '/recurring', icon: '🔄', label: 'Recurrentes' },
+  { to: '/profile', icon: '⚙️', label: 'Perfil' },
 ]
 
 export default function AppLayout() {

@@ -17,11 +17,20 @@ const categories = [
   { name: 'Salud', icon: '💊', color: '#ef4444', type: 'EXPENSE' as const },
   { name: 'Entretenimiento', icon: '🎬', color: '#ec4899', type: 'EXPENSE' as const },
   { name: 'Compras', icon: '🛍️', color: '#f59e0b', type: 'EXPENSE' as const },
+  { name: 'Regalos', icon: '🎁', color: '#f43f5e', type: 'EXPENSE' as const },
+  { name: 'Mecánica', icon: '🔧', color: '#64748b', type: 'EXPENSE' as const },
+  { name: 'Apuesta', icon: '🎰', color: '#a32c08', type: 'EXPENSE' as const },
+
   // Income
   { name: 'Honorarios Cobrados', icon: '💼', color: '#10b981', type: 'INCOME' as const },
   { name: 'Sueldo', icon: '💰', color: '#14b8a6', type: 'INCOME' as const },
   { name: 'Inversiones', icon: '📈', color: '#6366f1', type: 'INCOME' as const },
   { name: 'Otros Ingresos', icon: '📦', color: '#6b7280', type: 'BOTH' as const },
+  { name: 'Cobro Apuesta', icon: '🎰', color: '#f59e0b', type: 'INCOME' as const },
+  { name: 'Regalo', icon: '🎁', color: '#14b8a6', type: 'INCOME' as const },
+
+   // Both
+  { name: 'Otros', icon: '📦', color: '#6b7280', type: 'BOTH' as const },
 ]
 
 async function main() {
