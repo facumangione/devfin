@@ -1,5 +1,14 @@
 import { Router } from 'express'
-import { register, login, refresh, logout, me } from '../controllers/auth.controller'
+import {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  updateProfile,
+  updatePassword,
+  updateEmailPreferences,
+} from '../controllers/auth.controller'
 import { authenticate } from '../middleware/auth.middleware'
 
 const router = Router()
@@ -9,10 +18,8 @@ router.post('/login', login)
 router.post('/refresh', refresh)
 router.post('/logout', logout)
 router.get('/me', authenticate, me)
-
-export default router
-
-import { updateProfile, updatePassword } from '../controllers/auth.controller'
-
 router.patch('/profile', authenticate, updateProfile)
 router.patch('/password', authenticate, updatePassword)
+router.patch('/email-preferences', authenticate, updateEmailPreferences)
+
+export default router

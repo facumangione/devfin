@@ -19,6 +19,9 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  weeklyEmailEnabled Boolean @default(true)
+  weeklyEmailDay     Int     @default(1) // 0=domingo, 1=lunes ... 6=sábado (igual a Date.getDay())
+
   refreshTokens     RefreshToken[]
   transactions      Transaction[]
   recurringPayments RecurringPayment[]

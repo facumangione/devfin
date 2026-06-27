@@ -5,7 +5,10 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const prisma = new PrismaClient()
 
 async function sendWeeklyReport() {
+  const today = new Date().getDay() // 0=domingo, 1=lunes ... 6=sábado
+
   const users = await prisma.user.findMany({
+    where: { weeklyEmailEnabled: true, weeklyEmailDay: today },
     select: { id: true, name: true, email: true },
   })
 

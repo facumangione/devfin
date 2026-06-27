@@ -6,6 +6,8 @@ interface User {
   name: string
   email: string
   createdAt: string
+  weeklyEmailEnabled: boolean
+  weeklyEmailDay: number
 }
 
 interface AuthState {

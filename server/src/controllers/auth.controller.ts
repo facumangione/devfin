@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { AuthRequest } from '../middleware/auth.middleware'
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -20,6 +21,11 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
+})
+
+const emailPreferencesSchema = z.object({
+  weeklyEmailEnabled: z.boolean(),
+  weeklyEmailDay: z.number().int().min(0, 'Día inválido').max(6, 'Día inválido'),
 })
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -42,7 +48,14 @@ export async function register(req: Request, res: Response): Promise<void> {
 
   const user = await prisma.user.create({
     data: { name, email, passwordHash },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      weeklyEmailEnabled: true,
+      weeklyEmailDay: true,
+    },
   })
 
   const accessToken = generateAccessToken({ userId: user.id, email: user.email })
@@ -125,7 +138,14 @@ export async function me(req: Request, res: Response): Promise<void> {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      weeklyEmailEnabled: true,
+      weeklyEmailDay: true,
+    },
   })
 
   if (!user) {
@@ -184,4 +204,24 @@ export async function updatePassword(req: AuthRequest, res: Response): Promise<v
   await prisma.user.update({ where: { id: userId }, data: { passwordHash } })
 
   res.json({ message: 'Contraseña actualizada correctamente' })
+}
+
+export async function updateEmailPreferences(req: AuthRequest, res: Response): Promise<void> {
+  const userId = req.user!.userId
+  const result = emailPreferencesSchema.safeParse(req.body)
+
+  if (!result.success) {
+    res.status(400).json({ error: result.error.errors[0].message })
+    return
+  }
+
+  const { weeklyEmailEnabled, weeklyEmailDay } = result.data
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { weeklyEmailEnabled, weeklyEmailDay },
+    select: { id: true, name: true, email: true, weeklyEmailEnabled: true, weeklyEmailDay: true },
+  })
+
+  res.json({ user })
 }
