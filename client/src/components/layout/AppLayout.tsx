@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '../../store/auth.store'
 import { useThemeStore } from '../../store/theme.store'
@@ -17,7 +17,10 @@ export default function AppLayout() {
   const { user, logout } = useAuthStore()
   const { isDark } = useThemeStore()
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const isDashboard = location.pathname === '/dashboard'
 
   useEffect(() => {
     document.body.classList.toggle('dark', isDark)
@@ -42,10 +45,10 @@ export default function AppLayout() {
           >
             ☰
           </button>
-          <div className="flex items-center gap-2">
+          <Link to="/dashboard" className="flex items-center gap-2">
             <img src="/favicon.svg" alt="DevFin" className="w-7 h-7 rounded-lg" />
             <span className="font-semibold text-lavender-800 dark:text-white text-sm">Registro de Wallet</span>
-          </div>
+          </Link>
           <ThemeToggle />
         </div>
       </div>
@@ -61,14 +64,14 @@ export default function AppLayout() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed h-full py-6 px-4 flex flex-col z-50 transition-transform duration-300 w-60',
+          'fixed top-0 left-0 h-full py-6 px-4 flex flex-col z-50 transition-transform duration-300 w-60',
           'md:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-[120%]'
         )}
       >
         <div className="glass-strong rounded-2xl p-4 flex-1 flex flex-col">
           <div className="flex items-center justify-between gap-2 px-1 mb-8">
-            <div className="flex items-center gap-2">
+            <Link to="/dashboard" onClick={handleNavClick} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img src="/favicon.svg" alt="DevFin" className="w-9 h-9 rounded-xl" />
               <div>
                 <span className="font-semibold text-lavender-800 dark:text-white text-sm block leading-tight">
@@ -76,7 +79,7 @@ export default function AppLayout() {
                 </span>
                 <span className="text-[10px] text-lavender-400 dark:text-lavender-200/70">DevFin</span>
               </div>
-            </div>
+            </Link>
             <button
               onClick={() => setMobileOpen(false)}
               className="md:hidden text-lavender-400 dark:text-lavender-200/70 text-lg leading-none"
@@ -120,7 +123,21 @@ export default function AppLayout() {
       </aside>
 
       <div className="flex-1 md:ml-60">
-        <header className="hidden md:flex sticky top-0 z-10 px-8 pt-6 pb-2 justify-end">
+        <header className="hidden md:flex sticky top-0 z-10 px-8 pt-6 pb-2 justify-between items-center">
+          {isDashboard ? (
+            <span />
+          ) : (
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 text-sm font-medium text-lavender-600 dark:text-lavender-200 hover:text-lavender-800 dark:hover:text-white transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Volver al inicio
+            </Link>
+          )}
           <ThemeToggle />
         </header>
         <main className="px-4 pb-8 pt-4 md:px-8 md:pt-0 md:-mt-6">

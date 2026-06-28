@@ -6,7 +6,7 @@ import TransactionsPage from './pages/dashboard/TransactionsPage'
 import RecurringPage from './pages/dashboard/RecurringPage'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 import AppLayout from './components/layout/AppLayout'
-import ProfilePage from './pages/dashboard/ProfilePage' 
+import ProfilePage from './pages/dashboard/ProfilePage'
 
 export default function App() {
   return (
@@ -20,11 +20,11 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/recurring" element={<RecurringPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   )
