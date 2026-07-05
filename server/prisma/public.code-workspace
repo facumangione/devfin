@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "public",
+			"path": "../../../../Descargas/devfin-accounting-redesign/public"
+		},
+		{
+			"name": "devfin",
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
