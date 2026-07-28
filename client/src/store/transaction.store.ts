@@ -88,12 +88,9 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
   deleteTransaction: async (id) => {
-    await api.delete(`/transactions/${id}`)
-    set((state) => ({
-      transactions: state.transactions.filter((t) => t.id !== id),
-      total: state.total - 1,
-    }))
-  },
+  await api.delete(`/transactions/${id}`)
+  await get().fetchTransactions()
+},
 
   setFilters: (filters) => {
     set({ filters })
