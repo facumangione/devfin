@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '../../store/auth.store'
 import { useStatsStore } from '../../store/stats.store'
 import { useTransactionStore } from '../../store/transaction.store'
 import TransactionItem from '../../components/transactions/TransactionItem'
@@ -9,7 +8,6 @@ import CategoryChart from '../../components/charts/CategoryChart'
 import DateRangeFilter from '../../components/charts/DateRangeFilter'
 
 export default function DashboardPage() {
-  const { user } = useAuthStore()
   const { summary, monthly, byCategory, isLoading, fetchStats } = useStatsStore()
   const { transactions, fetchTransactions, fetchCategories } = useTransactionStore()
 
@@ -20,20 +18,18 @@ export default function DashboardPage() {
   }, [])
 
   const cards = [
-    { label: 'Balance', value: summary?.balance ?? 0, icon: '⚖️', positive: (summary?.balance ?? 0) >= 0 },
-    { label: 'Ingresos', value: summary?.income ?? 0, icon: '↑', positive: true },
-    { label: 'Egresos', value: summary?.expenses ?? 0, icon: '↓', positive: false },
+    { label: 'Balance', value: summary?.balance ?? 0, positive: (summary?.balance ?? 0) >= 0 },
+    { label: 'Ingresos', value: summary?.income ?? 0, positive: true },
+    { label: 'Egresos', value: summary?.expenses ?? 0, positive: false },
   ]
 
   return (
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 pt-2">
         <div>
-          <h1 className="text-xl font-semibold text-lavender-800 dark:text-white">
-            Hola, {user?.name?.split(' ')[0]} 👋
-          </h1>
+          <h1 className="text-xl font-semibold text-lavender-800 dark:text-white">Resumen</h1>
           <p className="text-sm text-lavender-400 dark:text-lavender-200/60 mt-0.5">
-            {summary?.month ?? 'Este mes'}
+            {summary?.month ?? 'Todo el historial'}
           </p>
         </div>
         <DateRangeFilter />
@@ -42,11 +38,16 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {cards.map((card) => (
           <div key={card.label} className="glass rounded-2xl p-5">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm text-lavender-400 dark:text-lavender-200/70">{card.label}</p>
-              <span className="text-lg">{card.icon}</span>
-            </div>
-            <p className={`text-2xl font-semibold ${card.positive ? 'text-mint-400 dark:text-emerald-300' : 'text-peach-400 dark:text-rose-300'}`}>
+            <p className="text-xs text-lavender-400 dark:text-lavender-200/60 mb-3 uppercase tracking-wide">
+              {card.label}
+            </p>
+            <p className={`text-2xl font-semibold ${
+              card.label === 'Balance'
+                ? (card.positive ? 'text-lavender-800 dark:text-white' : 'text-lavender-800 dark:text-white')
+                : card.positive
+                ? 'text-lavender-800 dark:text-white'
+                : 'text-lavender-800 dark:text-white'
+            }`}>
               {isLoading ? '—' : `$${Math.abs(card.value).toLocaleString('es-AR')}`}
             </p>
           </div>
@@ -64,8 +65,11 @@ export default function DashboardPage() {
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-lavender-800 dark:text-white text-sm">Movimientos recientes</h2>
-          <Link to="/transactions" className="text-sm text-lavender-400 dark:text-lavender-200 hover:text-lavender-600 dark:hover:text-white transition-colors">
+          <h2 className="font-medium text-lavender-800 dark:text-white text-sm">Movimientos recientes</h2>
+          <Link
+            to="/transactions"
+            className="text-xs text-lavender-400 dark:text-lavender-200/60 hover:text-lavender-800 dark:hover:text-white transition-colors"
+          >
             Ver todos →
           </Link>
         </div>
@@ -73,9 +77,11 @@ export default function DashboardPage() {
         <div className="glass rounded-2xl overflow-hidden">
           {transactions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-3xl mb-3">🧾</p>
-              <p className="text-lavender-400 dark:text-lavender-200/70 text-sm">Todavía no hay movimientos</p>
-              <Link to="/transactions" className="mt-3 inline-block text-lavender-600 dark:text-lavender-200 hover:underline text-sm font-medium">
+              <p className="text-lavender-400 dark:text-lavender-200/60 text-sm">Sin movimientos</p>
+              <Link
+                to="/transactions"
+                className="mt-2 inline-block text-lavender-600 dark:text-lavender-200 hover:underline text-xs"
+              >
                 Agregar el primero →
               </Link>
             </div>

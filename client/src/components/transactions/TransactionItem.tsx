@@ -12,7 +12,7 @@ export default function TransactionItem({ transaction, onEdit }: Props) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
-    if (!confirm('Delete this transaction?')) return
+    if (!confirm('¿Eliminar este movimiento?')) return
     setIsDeleting(true)
     await deleteTransaction(transaction.id)
     setIsDeleting(false)
@@ -20,62 +20,54 @@ export default function TransactionItem({ transaction, onEdit }: Props) {
 
   const amount = parseFloat(transaction.amount)
   const isIncome = transaction.type === 'INCOME'
-  const date = new Date(transaction.date).toLocaleDateString('en-US', {
-    month: 'short',
+  const date = new Date(transaction.date).toLocaleDateString('es-AR', {
     day: 'numeric',
+    month: 'short',
     year: 'numeric',
   })
 
   return (
-    <div className="flex items-center gap-4 p-4 hover:bg-slate-800/50 rounded-xl transition-colors group">
-      {/* Category icon */}
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
-        style={{ backgroundColor: `${transaction.category.color}20` }}
-      >
-        {transaction.category.icon}
-      </div>
-
-      {/* Info */}
+    <div className="flex items-center gap-4 px-4 py-3 hover:bg-white/20 dark:hover:bg-white/5 transition-colors group">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-slate-100 truncate">
+        <p className="text-sm font-medium text-lavender-800 dark:text-white truncate">
           {transaction.description}
         </p>
-        <p className="text-xs text-lavender-400 dark:text-lavender-200/60 mt-0.5">
+        <p className="text-xs text-lavender-400 dark:text-lavender-200/50 mt-0.5">
           {transaction.category.name} · {date}
           {(transaction as any).status === 'pending' && (
-            <span className="ml-2 text-[10px] bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 px-1.5 py-0.5 rounded-full font-medium">
-            Programado
+            <span className="ml-2 text-[10px] border border-lavender-300 dark:border-lavender-200/20 text-lavender-400 dark:text-lavender-200/50 px-1.5 py-0.5 rounded-full">
+              Programado
             </span>
-        )}
-      </p>
-      </div>
-
-      {/* Amount */}
-      <div className="text-right">
-        <p
-          className={`text-sm font-semibold ${
-            isIncome ? 'text-green-400' : 'text-red-400'
-          }`}
-        >
-          {isIncome ? '+' : '-'}${amount.toFixed(2)}
+          )}
         </p>
       </div>
 
-      {/* Actions */}
+      <p className={`text-sm font-medium tabular-nums shrink-0 ${
+        isIncome
+          ? 'text-lavender-800 dark:text-white'
+          : 'text-lavender-400 dark:text-lavender-200/70'
+      }`}>
+        {isIncome ? '+' : '−'}${amount.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+      </p>
+
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={() => onEdit(transaction)}
-          className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-700 rounded-lg transition-colors text-xs"
+          className="p-1.5 text-lavender-400 dark:text-lavender-200/50 hover:text-lavender-700 dark:hover:text-white hover:bg-white/40 dark:hover:bg-white/10 rounded-lg transition-colors"
         >
-          ✏️
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors text-xs"
+          className="p-1.5 text-lavender-400 dark:text-lavender-200/50 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors disabled:opacity-40"
         >
-          🗑️
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
       </div>
     </div>
