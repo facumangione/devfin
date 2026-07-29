@@ -89,7 +89,7 @@ export default function DateRangeFilter() {
             className={cn(
               'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
               active === p.value
-                ? 'bg-lavender-400 text-white'
+                ? 'bg-gold-500 text-white'
                 : 'text-lavender-400 dark:text-lavender-200/70 hover:bg-white/30 dark:hover:bg-white/10'
             )}
           >
@@ -105,19 +105,19 @@ export default function DateRangeFilter() {
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="glass rounded-lg px-3 py-1.5 text-lavender-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
+            className="glass rounded-lg px-3 py-1.5 text-lavender-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-gold-500/40"
           />
           <span className="text-lavender-400 dark:text-lavender-200/70 text-xs">a</span>
           <input
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="glass rounded-lg px-3 py-1.5 text-lavender-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
+            className="glass rounded-lg px-3 py-1.5 text-lavender-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-gold-500/40"
           />
           <button
             onClick={handleApply}
             disabled={!from && !to}
-            className="bg-lavender-400 hover:bg-lavender-600 disabled:opacity-40 text-white font-semibold rounded-lg px-3 py-1.5 text-xs transition-colors"
+            className="bg-gold-500 hover:bg-gold-600 disabled:opacity-40 text-white font-semibold rounded-lg px-3 py-1.5 text-xs transition-colors"
           >
             Aplicar
           </button>

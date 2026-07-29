@@ -52,7 +52,7 @@ export default function TransactionFiltersBar({ onFilterChange }: Props) {
       <select
         value={filters.categoryId ?? ''}
         onChange={(e) => handleCategoryChange(e.target.value)}
-        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500/40"
       >
         <option value="">Todas las categorías</option>
         {categories.map((cat) => (
@@ -66,13 +66,13 @@ export default function TransactionFiltersBar({ onFilterChange }: Props) {
       <input
         type="date"
         onChange={(e) => handleDateChange('from', e.target.value)}
-        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500/40"
       />
       <span className="text-lavender-300 dark:text-lavender-200/50 text-xs">a</span>
       <input
         type="date"
         onChange={(e) => handleDateChange('to', e.target.value)}
-        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500/40"
       />
     </div>
   )

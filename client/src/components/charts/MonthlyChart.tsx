@@ -40,11 +40,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export default function MonthlyChart({ data }: Props) {
   const { isDark } = useThemeStore()
-  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(58,53,80,0.1)'
-  const tickColor = isDark ? 'rgba(236,229,249,0.5)' : '#a78bd8'
-  const incomeColor = isDark ? '#4d9b7a' : '#357a5e'
-  const expensesColor = isDark ? '#d97a6c' : '#bd5a4b'
-  const balanceColor = isDark ? '#a78bd8' : '#8266c4'
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(33,29,23,0.08)'
+  const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#9c9186'
+  const incomeColor = isDark ? '#5ea37c' : '#357a5e'
+  const expensesColor = isDark ? '#e0876b' : '#bd5a4b'
+  const balanceColor = isDark ? '#dbb769' : '#a17636'
 
   return (
     <div>

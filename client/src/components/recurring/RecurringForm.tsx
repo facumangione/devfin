@@ -118,7 +118,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
               {...register('description')}
               type="text"
               placeholder="Ej: Netflix, Alquiler, Cuota préstamo"
-              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
             />
             {errors.description && <p className="mt-1 text-xs text-peach-500">{errors.description.message}</p>}
           </div>
@@ -130,7 +130,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
               type="number"
               step="0.01"
               placeholder="0.00"
-              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
             />
             {errors.amount && <p className="mt-1 text-xs text-peach-500">{errors.amount.message}</p>}
           </div>
@@ -139,7 +139,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
             <label className="block text-sm font-medium text-lavender-600 dark:text-lavender-200 mb-1.5">Categoría</label>
             <select
               {...register('categoryId')}
-              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
             >
               <option value="">Elegí una categoría</option>
               {filteredCategories.map((cat) => (
@@ -158,7 +158,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
               type="number"
               min="1"
               placeholder="Ej: 3, 6, 12 — vacío = sin límite"
-              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
             />
           </div>
 
@@ -167,7 +167,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
             <input
               {...register('nextDueDate')}
               type="date"
-              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
             />
             {errors.nextDueDate && <p className="mt-1 text-xs text-peach-500">{errors.nextDueDate.message}</p>}
           </div>
@@ -183,7 +183,7 @@ export default function RecurringForm({ payment, onClose }: Props) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+              className="flex-1 bg-gold-500 hover:bg-gold-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
             >
               {isSubmitting ? 'Guardando...' : payment ? 'Guardar cambios' : 'Crear pago'}
             </button>

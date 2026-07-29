@@ -111,7 +111,7 @@ export default function TransactionsPage() {
           </button>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-lavender-400 hover:bg-lavender-600 text-white font-semibold rounded-xl px-4 py-2 text-sm transition-colors"
+            className="bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-xl px-4 py-2 text-sm transition-colors"
           >
             + Agregar movimiento
           </button>
@@ -125,7 +125,7 @@ export default function TransactionsPage() {
       <div className="glass rounded-2xl overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-5 h-5 border-2 border-lavender-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : transactions.length === 0 ? (
           <div className="text-center py-16">
@@ -159,7 +159,7 @@ export default function TransactionsPage() {
               onClick={() => handlePageChange(page)}
               className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                 page === currentPage
-                  ? 'bg-lavender-400 text-white'
+                  ? 'bg-gold-500 text-white'
                   : 'text-lavender-400 dark:text-lavender-200/60 hover:text-lavender-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
               }`}
             >

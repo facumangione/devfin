@@ -69,7 +69,7 @@ export default function RegisterPage() {
                 type="text"
                 autoComplete="name"
                 placeholder="Juan Pérez"
-                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
               />
               {errors.name && <p className="mt-1 text-xs text-peach-500">{errors.name.message}</p>}
             </div>
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                 type="email"
                 autoComplete="email"
                 placeholder="vos@ejemplo.com"
-                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
               />
               {errors.email && <p className="mt-1 text-xs text-peach-500">{errors.email.message}</p>}
             </div>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
                 type="password"
                 autoComplete="new-password"
                 placeholder="Mínimo 8 caracteres"
-                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+                className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
               />
               {errors.password && <p className="mt-1 text-xs text-peach-500">{errors.password.message}</p>}
             </div>
@@ -105,7 +105,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+              className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
             >
               {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>

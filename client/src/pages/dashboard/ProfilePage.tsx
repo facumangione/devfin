@@ -43,7 +43,7 @@ function PasswordInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full glass rounded-xl px-3.5 py-2.5 pr-10 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+        className="w-full glass rounded-xl px-3.5 py-2.5 pr-10 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
       />
       <button
         type="button"
@@ -176,7 +176,7 @@ export default function ProfilePage() {
           <div className="space-y-6">
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-full bg-lavender-100 dark:bg-lavender-400/10 flex items-center justify-center text-lavender-600 dark:text-lavender-200 shrink-0">
+                <div className="w-8 h-8 rounded-full bg-lavender-100 dark:bg-gold-500/10 flex items-center justify-center text-lavender-600 dark:text-lavender-200 shrink-0">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 20h9" strokeLinecap="round" />
                     <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" />
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
+                    className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm"
                   />
                 </div>
                 {nameMsg && <p className="text-xs text-mint-400 dark:text-emerald-300">{nameMsg}</p>}
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleUpdateName}
                   disabled={loadingName}
-                  className="w-full bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+                  className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
                 >
                   {loadingName ? 'Guardando...' : 'Guardar nombre'}
                 </button>
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                   onClick={() => setWeeklyEmailEnabled((v) => !v)}
                   aria-pressed={weeklyEmailEnabled}
                   className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${
-                    weeklyEmailEnabled ? 'bg-lavender-400' : 'bg-lavender-200 dark:bg-white/10'
+                    weeklyEmailEnabled ? 'bg-gold-500' : 'bg-lavender-200 dark:bg-white/10'
                   }`}
                 >
                   <span
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                     value={weeklyEmailDay}
                     onChange={(e) => setWeeklyEmailDay(Number(e.target.value))}
                     disabled={!weeklyEmailEnabled}
-                    className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm disabled:opacity-50"
+                    className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gold-500/40 transition text-sm disabled:opacity-50"
                   >
                     {DAYS.map((d) => (
                       <option key={d.value} value={d.value}>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleUpdateEmailPrefs}
                   disabled={loadingEmail}
-                  className="w-full bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+                  className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
                 >
                   {loadingEmail ? 'Guardando...' : 'Guardar preferencia'}
                 </button>
@@ -314,7 +314,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleUpdatePassword}
                 disabled={loadingPass}
-                className="w-full bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+                className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
               >
                 {loadingPass ? 'Guardando...' : 'Cambiar contraseña'}
               </button>

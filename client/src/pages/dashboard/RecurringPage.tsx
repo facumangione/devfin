@@ -71,7 +71,7 @@ export default function RecurringPage() {
         {payment.totalInstallments && !faded && (
           <div className="mt-1.5 w-24 h-1 bg-lavender-100 dark:bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-1 bg-lavender-400 dark:bg-lavender-300 rounded-full"
+              className="h-1 bg-gold-500 dark:bg-gold-300 rounded-full"
               style={{ width: `${(payment.paidInstallments / payment.totalInstallments) * 100}%` }}
             />
           </div>
@@ -145,7 +145,7 @@ export default function RecurringPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="w-4 h-4 border-2 border-lavender-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : payments.length === 0 ? (
         <div className="glass rounded-2xl text-center py-16">
