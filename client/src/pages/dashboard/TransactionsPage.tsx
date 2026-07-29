@@ -15,11 +15,13 @@ export default function TransactionsPage() {
     filters,
     fetchTransactions,
     fetchCategories,
+    deleteAllTransactions,
   } = useTransactionStore()
 
   const [showForm, setShowForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [isExporting, setIsExporting] = useState(false)
+  const [isDeletingAll, setIsDeletingAll] = useState(false)
 
   useEffect(() => {
     fetchCategories()
@@ -42,6 +44,21 @@ export default function TransactionsPage() {
 
   const handlePageChange = (page: number) => {
     fetchTransactions({ ...filters, page })
+  }
+
+  const handleDeleteAll = async () => {
+    if (total === 0) return
+    const confirmed = confirm(
+      `¿Borrar las ${total} transacciones? Esta acción no se puede deshacer.`
+    )
+    if (!confirmed) return
+
+    setIsDeletingAll(true)
+    try {
+      await deleteAllTransactions()
+    } finally {
+      setIsDeletingAll(false)
+    }
   }
 
   const handleExport = async () => {
@@ -84,6 +101,13 @@ export default function TransactionsPage() {
             className="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             {isExporting ? 'Exporting...' : '↓ Export CSV'}
+          </button>
+          <button
+            onClick={handleDeleteAll}
+            disabled={isDeletingAll || total === 0}
+            className="bg-red-500/10 hover:bg-red-500/20 disabled:opacity-40 disabled:cursor-not-allowed text-red-400 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          >
+            {isDeletingAll ? 'Borrando...' : '🗑️ Borrar todas'}
           </button>
           <button
             onClick={() => setShowForm(true)}

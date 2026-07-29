@@ -22,6 +22,7 @@ interface TransactionState {
   createTransaction: (data: CreateTransactionInput) => Promise<void>
   updateTransaction: (id: string, data: Partial<CreateTransactionInput>) => Promise<void>
   deleteTransaction: (id: string) => Promise<void>
+  deleteAllTransactions: () => Promise<void>
   setFilters: (filters: TransactionFilters) => void
 }
 
@@ -88,9 +89,24 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
   deleteTransaction: async (id) => {
-  await api.delete(`/transactions/${id}`)
-  await get().fetchTransactions()
-},
+    await api.delete(`/transactions/${id}`)
+
+    const { filters } = get()
+    await get().fetchTransactions(filters)
+
+    // Si la página actual quedó vacía (borramos el último item de una página
+    // que no es la primera), retrocedemos a la última página con datos.
+    const { transactions, currentPage, totalPages } = get()
+    if (transactions.length === 0 && currentPage > 1) {
+      const safePage = Math.max(1, totalPages)
+      await get().fetchTransactions({ ...filters, page: safePage })
+    }
+  },
+
+  deleteAllTransactions: async () => {
+    await api.delete('/transactions')
+    await get().fetchTransactions({ ...get().filters, page: 1 })
+  },
 
   setFilters: (filters) => {
     set({ filters })

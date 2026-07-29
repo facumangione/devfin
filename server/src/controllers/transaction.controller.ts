@@ -168,3 +168,10 @@ export async function deleteTransaction(req: AuthRequest, res: Response): Promis
   await prisma.transaction.delete({ where: { id } })
   res.status(204).send()
 }
+
+export async function deleteAllTransactions(req: AuthRequest, res: Response): Promise<void> {
+  const userId = req.user!.userId
+
+  const { count } = await prisma.transaction.deleteMany({ where: { userId } })
+  res.status(200).json({ data: { count } })
+}

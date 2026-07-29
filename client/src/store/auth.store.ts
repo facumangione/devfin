@@ -22,7 +22,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isLoading: false,
+  isLoading: !!localStorage.getItem('accessToken'), // si hay token, esperar a verificarlo
   isAuthenticated: false,
 
   login: async (email, password) => {
@@ -59,7 +59,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   fetchMe: async () => {
     const token = localStorage.getItem('accessToken')
-    if (!token) return
+    if (!token) {
+      set({ isLoading: false }) // sin token, terminar carga inmediatamente
+      return
+    }
 
     set({ isLoading: true })
     try {
@@ -68,6 +71,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      set({ isAuthenticated: false })
     } finally {
       set({ isLoading: false })
     }
