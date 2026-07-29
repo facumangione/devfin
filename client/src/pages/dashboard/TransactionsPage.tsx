@@ -89,31 +89,31 @@ export default function TransactionsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 pt-2">
         <div>
-          <h1 className="text-xl font-bold text-slate-100">Transactions</h1>
-          <p className="text-sm text-slate-400 mt-0.5">{total} total</p>
+          <h1 className="text-xl font-semibold text-lavender-800 dark:text-white">Movimientos</h1>
+          <p className="text-sm text-lavender-400 dark:text-lavender-200/60 mt-0.5">{total} en total</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
             disabled={isExporting || transactions.length === 0}
-            className="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="glass disabled:opacity-40 disabled:cursor-not-allowed text-lavender-600 dark:text-lavender-200 rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-white/50 dark:hover:bg-white/10"
           >
-            {isExporting ? 'Exporting...' : '↓ Export CSV'}
+            {isExporting ? 'Exportando...' : '↓ Exportar CSV'}
           </button>
           <button
             onClick={handleDeleteAll}
             disabled={isDeletingAll || total === 0}
-            className="bg-red-500/10 hover:bg-red-500/20 disabled:opacity-40 disabled:cursor-not-allowed text-red-400 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="bg-peach-50 hover:bg-peach-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 disabled:opacity-40 disabled:cursor-not-allowed text-peach-600 dark:text-rose-300 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
           >
             {isDeletingAll ? 'Borrando...' : '🗑️ Borrar todas'}
           </button>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-green-500 hover:bg-green-400 text-slate-950 font-semibold rounded-lg px-4 py-2 text-sm transition-colors"
+            className="bg-lavender-400 hover:bg-lavender-600 text-white font-semibold rounded-xl px-4 py-2 text-sm transition-colors"
           >
-            + Add transaction
+            + Agregar movimiento
           </button>
         </div>
       </div>
@@ -122,24 +122,24 @@ export default function TransactionsPage() {
         <TransactionFiltersBar onFilterChange={handleFilterChange} />
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+      <div className="glass rounded-2xl overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-lavender-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : transactions.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-3xl mb-3">💸</p>
-            <p className="text-slate-400 text-sm">No transactions yet</p>
+            <p className="text-lavender-400 dark:text-lavender-200/70 text-sm">Todavía no hay movimientos</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-4 text-green-400 hover:text-green-300 text-sm font-medium"
+              className="mt-4 text-lavender-600 dark:text-lavender-200 hover:underline text-sm font-medium"
             >
-              Add your first one
+              Agregar el primero →
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-slate-800/50">
+          <div className="divide-y divide-white/40 dark:divide-white/5">
             {transactions.map((transaction) => (
               <TransactionItem
                 key={transaction.id}
@@ -159,8 +159,8 @@ export default function TransactionsPage() {
               onClick={() => handlePageChange(page)}
               className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                 page === currentPage
-                  ? 'bg-green-500 text-slate-950'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'bg-lavender-400 text-white'
+                  : 'text-lavender-400 dark:text-lavender-200/60 hover:text-lavender-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
               }`}
             >
               {page}

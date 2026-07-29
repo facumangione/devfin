@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { useThemeStore } from '../../store/theme.store'
 
 interface MonthlyData {
   month: string
@@ -24,13 +25,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs shadow-xl">
-      <p className="font-medium text-slate-300 mb-2">{label}</p>
+    <div className="glass-strong rounded-xl p-3 text-xs shadow-xl">
+      <p className="font-medium text-lavender-800 dark:text-white mb-2">{label}</p>
       {payload.map((entry: any) => (
         <div key={entry.name} className="flex items-center gap-2 mb-1">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-          <span className="text-slate-400 capitalize">{entry.name}:</span>
-          <span className="font-medium text-slate-200">${entry.value.toFixed(2)}</span>
+          <span className="text-lavender-400 dark:text-lavender-200/70 capitalize">{entry.name}:</span>
+          <span className="font-medium text-lavender-800 dark:text-white">${entry.value.toFixed(2)}</span>
         </div>
       ))}
     </div>
@@ -38,53 +39,63 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export default function MonthlyChart({ data }: Props) {
+  const { isDark } = useThemeStore()
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(58,53,80,0.1)'
+  const tickColor = isDark ? 'rgba(236,229,249,0.5)' : '#a78bd8'
+  const incomeColor = isDark ? '#4d9b7a' : '#357a5e'
+  const expensesColor = isDark ? '#d97a6c' : '#bd5a4b'
+  const balanceColor = isDark ? '#a78bd8' : '#8266c4'
+
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-      <h3 className="font-semibold text-slate-100 mb-4">Monthly Overview</h3>
+    <div>
+      <h3 className="font-semibold text-lavender-800 dark:text-white mb-4">Resumen mensual</h3>
       {data.length === 0 ? (
-        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">
-          No data available
+        <div className="flex items-center justify-center h-48 text-lavender-400 dark:text-lavender-200/60 text-sm">
+          Sin datos disponibles
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
             <XAxis
               dataKey="month"
-              tick={{ fill: '#64748b', fontSize: 11 }}
-              axisLine={{ stroke: '#1e293b' }}
+              tick={{ fill: tickColor, fontSize: 11 }}
+              axisLine={{ stroke: gridColor }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: '#64748b', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => `$${v}`}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend
-              wrapperStyle={{ fontSize: '12px', color: '#94a3b8', paddingTop: '12px' }}
+              wrapperStyle={{ fontSize: '12px', color: tickColor, paddingTop: '12px' }}
             />
             <Line
               type="monotone"
               dataKey="income"
-              stroke="#22c55e"
+              name="Ingresos"
+              stroke={incomeColor}
               strokeWidth={2}
-              dot={{ fill: '#22c55e', r: 3 }}
+              dot={{ fill: incomeColor, r: 3 }}
               activeDot={{ r: 5 }}
             />
             <Line
               type="monotone"
               dataKey="expenses"
-              stroke="#ef4444"
+              name="Egresos"
+              stroke={expensesColor}
               strokeWidth={2}
-              dot={{ fill: '#ef4444', r: 3 }}
+              dot={{ fill: expensesColor, r: 3 }}
               activeDot={{ r: 5 }}
             />
             <Line
               type="monotone"
               dataKey="balance"
-              stroke="#6366f1"
+              name="Balance"
+              stroke={balanceColor}
               strokeWidth={2}
               strokeDasharray="4 2"
               dot={false}

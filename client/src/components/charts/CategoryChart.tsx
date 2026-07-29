@@ -16,12 +16,12 @@ const CustomTooltip = ({ active, payload }: any) => {
   const item = payload[0].payload
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs shadow-xl">
-      <p className="font-medium text-slate-200">
+    <div className="glass-strong rounded-xl p-3 text-xs shadow-xl">
+      <p className="font-medium text-lavender-800 dark:text-white">
         {item.icon} {item.name}
       </p>
-      <p className="text-slate-400 mt-1">
-        Total: <span className="text-red-400 font-semibold">${item.total.toFixed(2)}</span>
+      <p className="text-lavender-400 dark:text-lavender-200/70 mt-1">
+        Total: <span className="text-peach-600 dark:text-rose-300 font-semibold">${item.total.toFixed(2)}</span>
       </p>
     </div>
   )
@@ -33,11 +33,11 @@ const CustomLegend = ({ payload }: any) => (
       <div key={entry.value} className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-          <span className="text-slate-400">
+          <span className="text-lavender-400 dark:text-lavender-200/70">
             {entry.payload.icon} {entry.value}
           </span>
         </div>
-        <span className="text-slate-300 font-medium ml-4">
+        <span className="text-lavender-700 dark:text-lavender-100 font-medium ml-4">
           ${entry.payload.total.toFixed(2)}
         </span>
       </div>
@@ -49,11 +49,11 @@ export default function CategoryChart({ data }: Props) {
   const top = data.slice(0, 6)
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-      <h3 className="font-semibold text-slate-100 mb-4">Expenses by Category</h3>
+    <div>
+      <h3 className="font-semibold text-lavender-800 dark:text-white mb-4">Egresos por categoría</h3>
       {top.length === 0 ? (
-        <div className="flex items-center justify-center h-48 text-slate-500 text-sm">
-          No expenses this month
+        <div className="flex items-center justify-center h-48 text-lavender-400 dark:text-lavender-200/60 text-sm">
+          Sin egresos este mes
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={220}>

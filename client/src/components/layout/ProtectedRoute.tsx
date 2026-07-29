@@ -11,8 +11,8 @@ export default function ProtectedRoute() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-lavender-400 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }

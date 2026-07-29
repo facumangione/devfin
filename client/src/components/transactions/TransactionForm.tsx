@@ -7,11 +7,11 @@ import { Transaction } from '../../types/transaction.types'
 import { cn } from '../../lib/utils'
 
 const schema = z.object({
-  description: z.string().min(1, 'Description is required'),
-  amount: z.coerce.number().positive('Amount must be greater than 0'),
+  description: z.string().min(1, 'La descripción es obligatoria'),
+  amount: z.coerce.number().positive('El monto debe ser mayor a 0'),
   type: z.enum(['INCOME', 'EXPENSE']),
-  categoryId: z.string().min(1, 'Category is required'),
-  date: z.string().min(1, 'Date is required'),
+  categoryId: z.string().min(1, 'Elegí una categoría'),
+  date: z.string().min(1, 'La fecha es obligatoria'),
 })
 
 type FormData = z.infer<typeof schema>
@@ -72,15 +72,15 @@ export default function TransactionForm({ transaction, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md">
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
-          <h2 className="font-semibold text-slate-100">
-            {transaction ? 'Edit transaction' : 'New transaction'}
+    <div className="fixed inset-0 bg-lavender-800/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="glass-strong rounded-3xl w-full max-w-md shadow-xl">
+        <div className="flex items-center justify-between p-5 border-b border-white/40 dark:border-white/10">
+          <h2 className="font-semibold text-lavender-800 dark:text-white">
+            {transaction ? 'Editar movimiento' : 'Nuevo movimiento'}
           </h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition-colors"
+            className="text-lavender-400 dark:text-lavender-200/70 hover:text-lavender-700 dark:hover:text-white transition-colors"
           >
             ✕
           </button>
@@ -88,69 +88,69 @@ export default function TransactionForm({ transaction, onClose }: Props) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
           {/* Type toggle */}
-          <div className="flex rounded-lg overflow-hidden border border-slate-700">
+          <div className="flex rounded-xl overflow-hidden glass p-1 gap-1">
             {(['EXPENSE', 'INCOME'] as const).map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setValue('type', type)}
                 className={cn(
-                  'flex-1 py-2 text-sm font-medium transition-colors',
+                  'flex-1 py-2 rounded-lg text-sm font-medium transition-colors',
                   selectedType === type
                     ? type === 'EXPENSE'
-                      ? 'bg-red-500/20 text-red-400'
-                      : 'bg-green-500/20 text-green-400'
-                    : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-peach-100 text-peach-600 dark:bg-rose-500/20 dark:text-rose-200'
+                      : 'bg-mint-100 text-mint-600 dark:bg-emerald-500/20 dark:text-emerald-200'
+                    : 'text-lavender-400 dark:text-lavender-200/60 hover:text-lavender-600 dark:hover:text-white'
                 )}
               >
-                {type === 'EXPENSE' ? '↓ Expense' : '↑ Income'}
+                {type === 'EXPENSE' ? '↓ Egreso' : '↑ Ingreso'}
               </button>
             ))}
           </div>
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Amount
+            <label className="block text-sm font-medium text-lavender-600 dark:text-lavender-200 mb-1.5">
+              Monto
             </label>
             <input
               {...register('amount')}
               type="number"
               step="0.01"
               placeholder="0.00"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
             />
             {errors.amount && (
-              <p className="mt-1 text-xs text-red-400">{errors.amount.message}</p>
+              <p className="mt-1 text-xs text-peach-500">{errors.amount.message}</p>
             )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Description
+            <label className="block text-sm font-medium text-lavender-600 dark:text-lavender-200 mb-1.5">
+              Descripción
             </label>
             <input
               {...register('description')}
               type="text"
-              placeholder="e.g. Lunch at the office"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition text-sm"
+              placeholder="Ej: Almuerzo en la oficina"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white placeholder:text-lavender-300 dark:placeholder:text-lavender-200/40 focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
             />
             {errors.description && (
-              <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>
+              <p className="mt-1 text-xs text-peach-500">{errors.description.message}</p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Category
+            <label className="block text-sm font-medium text-lavender-600 dark:text-lavender-200 mb-1.5">
+              Categoría
             </label>
             <select
               {...register('categoryId')}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
             >
-              <option value="">Select a category</option>
+              <option value="">Elegí una categoría</option>
               {filteredCategories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.icon} {cat.name}
@@ -158,22 +158,22 @@ export default function TransactionForm({ transaction, onClose }: Props) {
               ))}
             </select>
             {errors.categoryId && (
-              <p className="mt-1 text-xs text-red-400">{errors.categoryId.message}</p>
+              <p className="mt-1 text-xs text-peach-500">{errors.categoryId.message}</p>
             )}
           </div>
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Date
+            <label className="block text-sm font-medium text-lavender-600 dark:text-lavender-200 mb-1.5">
+              Fecha
             </label>
             <input
               {...register('date')}
               type="date"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition text-sm"
+              className="w-full glass rounded-xl px-3.5 py-2.5 text-lavender-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lavender-400/40 transition text-sm"
             />
             {errors.date && (
-              <p className="mt-1 text-xs text-red-400">{errors.date.message}</p>
+              <p className="mt-1 text-xs text-peach-500">{errors.date.message}</p>
             )}
           </div>
 
@@ -181,16 +181,16 @@ export default function TransactionForm({ transaction, onClose }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg py-2.5 text-sm font-medium transition-colors"
+              className="flex-1 glass text-lavender-600 dark:text-lavender-200 rounded-xl py-2.5 text-sm font-medium transition-colors hover:bg-white/50 dark:hover:bg-white/10"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-slate-950 font-semibold rounded-lg py-2.5 text-sm transition-colors"
+              className="flex-1 bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
             >
-              {isSubmitting ? 'Saving...' : transaction ? 'Save changes' : 'Add transaction'}
+              {isSubmitting ? 'Guardando...' : transaction ? 'Guardar cambios' : 'Agregar movimiento'}
             </button>
           </div>
         </form>

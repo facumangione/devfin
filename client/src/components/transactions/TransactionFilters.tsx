@@ -31,19 +31,19 @@ export default function TransactionFiltersBar({ onFilterChange }: Props) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       {/* Type filter */}
-      <div className="flex rounded-lg overflow-hidden border border-slate-700 text-xs">
+      <div className="flex rounded-xl overflow-hidden glass p-1 gap-1 text-xs">
         {([undefined, 'EXPENSE', 'INCOME'] as const).map((type) => (
           <button
             key={type ?? 'all'}
             onClick={() => handleTypeChange(type)}
             className={cn(
-              'px-3 py-1.5 font-medium transition-colors',
+              'px-3 py-1.5 rounded-lg font-medium transition-colors',
               filters.type === type
-                ? 'bg-slate-700 text-slate-100'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-white/70 dark:bg-white/15 text-lavender-800 dark:text-white'
+                : 'text-lavender-400 dark:text-lavender-200/60 hover:text-lavender-700 dark:hover:text-white'
             )}
           >
-            {type === undefined ? 'All' : type === 'EXPENSE' ? '↓ Expenses' : '↑ Income'}
+            {type === undefined ? 'Todos' : type === 'EXPENSE' ? '↓ Egresos' : '↑ Ingresos'}
           </button>
         ))}
       </div>
@@ -52,9 +52,9 @@ export default function TransactionFiltersBar({ onFilterChange }: Props) {
       <select
         value={filters.categoryId ?? ''}
         onChange={(e) => handleCategoryChange(e.target.value)}
-        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-300 text-xs focus:outline-none focus:ring-1 focus:ring-green-500/50"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
       >
-        <option value="">All categories</option>
+        <option value="">Todas las categorías</option>
         {categories.map((cat) => (
           <option key={cat.id} value={cat.id}>
             {cat.icon} {cat.name}
@@ -66,13 +66,13 @@ export default function TransactionFiltersBar({ onFilterChange }: Props) {
       <input
         type="date"
         onChange={(e) => handleDateChange('from', e.target.value)}
-        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-300 text-xs focus:outline-none focus:ring-1 focus:ring-green-500/50"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
       />
-      <span className="text-slate-500 text-xs">to</span>
+      <span className="text-lavender-300 dark:text-lavender-200/50 text-xs">a</span>
       <input
         type="date"
         onChange={(e) => handleDateChange('to', e.target.value)}
-        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-300 text-xs focus:outline-none focus:ring-1 focus:ring-green-500/50"
+        className="glass rounded-xl px-3 py-1.5 text-lavender-600 dark:text-lavender-200 text-xs focus:outline-none focus:ring-2 focus:ring-lavender-400/40"
       />
     </div>
   )
