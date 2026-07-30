@@ -18,10 +18,20 @@ export default function LoginPage() {
   const { login, isLoading } = useAuthStore()
   const { isDark } = useThemeStore()
   const [serverError, setServerError] = useState('')
+  const [slowWarning, setSlowWarning] = useState(false)
 
   useEffect(() => {
     document.body.classList.toggle('dark', isDark)
   }, [isDark])
+
+  useEffect(() => {
+    if (!isLoading) {
+      setSlowWarning(false)
+      return
+    }
+    const timer = setTimeout(() => setSlowWarning(true), 4000)
+    return () => clearTimeout(timer)
+  }, [isLoading])
 
   const {
     register,
@@ -94,6 +104,12 @@ export default function LoginPage() {
             >
               {isLoading ? 'Ingresando...' : 'Iniciar sesión'}
             </button>
+
+            {slowWarning && (
+              <p className="text-center text-xs text-lavender-400 dark:text-lavender-200/60">
+                El servidor puede tardar hasta un minuto en despertar si estuvo inactivo. Un toque de paciencia 🙏
+              </p>
+            )}
           </form>
 
           <p className="mt-6 text-center text-sm text-lavender-400 dark:text-lavender-200/70">

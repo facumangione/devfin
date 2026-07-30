@@ -6,8 +6,10 @@ export default function ProtectedRoute() {
   const { isAuthenticated, isLoading, fetchMe } = useAuthStore()
 
   useEffect(() => {
-    fetchMe()
-  }, [fetchMe])
+    if (!isAuthenticated) {
+      fetchMe()
+    }
+  }, [isAuthenticated, fetchMe])
 
   if (isLoading) {
     return (
