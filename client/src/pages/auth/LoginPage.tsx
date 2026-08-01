@@ -25,13 +25,13 @@ export default function LoginPage() {
   }, [isDark])
 
   useEffect(() => {
-    if (!isLoading) {
-      setSlowWarning(false)
-      return
-    }
-    const timer = setTimeout(() => setSlowWarning(true), 4000)
-    return () => clearTimeout(timer)
-  }, [isLoading])
+  if (!isSubmitting) {
+    setSlowWarning(false)
+    return
+  }
+  const timer = setTimeout(() => setSlowWarning(true), 4000)
+  return () => clearTimeout(timer)
+}, [isSubmitting])
 
   const {
     register,
