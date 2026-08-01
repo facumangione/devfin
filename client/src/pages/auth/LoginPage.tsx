@@ -24,20 +24,26 @@ export default function LoginPage() {
     document.body.classList.toggle('dark', isDark)
   }, [isDark])
 
+
   useEffect(() => {
-  if (!isSubmitting) {
-    setSlowWarning(false)
-    return
-  }
-  const timer = setTimeout(() => setSlowWarning(true), 4000)
-  return () => clearTimeout(timer)
-}, [isSubmitting])
+    document.body.classList.toggle('dark', isDark)
+  }, [isDark])
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      setSlowWarning(false)
+      return
+    }
+    const timer = setTimeout(() => setSlowWarning(true), 4000)
+    return () => clearTimeout(timer)
+  }, [isSubmitting])
+  
 
   const onSubmit = async (data: FormData) => {
     setServerError('')
