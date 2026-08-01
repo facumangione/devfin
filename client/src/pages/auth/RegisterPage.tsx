@@ -16,7 +16,7 @@ type FormData = z.infer<typeof schema>
 
 export default function RegisterPage() {
   const navigate = useNavigate()
-  const { register: registerUser, isLoading } = useAuthStore()
+  const { register: registerUser } = useAuthStore()
   const { isDark } = useThemeStore()
   const [serverError, setServerError] = useState('')
 
@@ -27,7 +27,7 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
@@ -104,10 +104,10 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full bg-gold-500 hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+              disabled={isSubmitting}
+              className="w-full bg-lavender-400 hover:bg-lavender-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
             >
-              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+              {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
           </form>
 
