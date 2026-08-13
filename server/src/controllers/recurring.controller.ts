@@ -42,14 +42,7 @@ export async function createRecurringPayment(req: AuthRequest, res: Response): P
   const startDate = new Date(nextDueDate)
   const installments = totalInstallments ?? null
 
-  // Calculate final nextDueDate (after all installments if finite, or same date if indefinite)
-  let finalNextDueDate = new Date(startDate)
-  if (installments) {
-    finalNextDueDate = new Date(startDate)
-    finalNextDueDate.setMonth(finalNextDueDate.getMonth() + installments)
-  }
-
-  // Create the recurring payment record
+  // Create the recurring payment starting at the first due date (this month)
   const payment = await prisma.recurringPayment.create({
     data: {
       description,
@@ -58,36 +51,41 @@ export async function createRecurringPayment(req: AuthRequest, res: Response): P
       categoryId,
       userId,
       totalInstallments: installments,
-      paidInstallments: installments ?? 0,
-      nextDueDate: finalNextDueDate,
-      active: installments ? false : true, // if finite, mark as completed; if indefinite, keep active
+      paidInstallments: 0,
+      nextDueDate: startDate,
+      active: true,
     },
     include: { category: true },
   })
 
-  // Generate all transactions immediately
-  const transactionsToCreate = []
-  const count = installments ?? 1 // for indefinite, create 1 future transaction
-
-  for (let i = 0; i < count; i++) {
-    const txDate = new Date(startDate)
-    txDate.setMonth(txDate.getMonth() + i)
-
-    transactionsToCreate.push({
+  // Charge only the current installment now. The rest are scheduled: the
+  // cron job (cron.ts) picks them up one by one as nextDueDate is reached.
+  await prisma.transaction.create({
+    data: {
       amount,
-      description: installments
-        ? `${description} (cuota ${i + 1}/${installments})`
-        : description,
+      description: installments ? `${description} (cuota 1/${installments})` : description,
       type,
-      date: txDate,
+      date: startDate,
       userId,
       categoryId,
-    })
-  }
+    },
+  })
 
-  await prisma.transaction.createMany({ data: transactionsToCreate })
+  const isCompleted = installments !== null && installments <= 1
+  const nextDate = new Date(startDate)
+  nextDate.setMonth(nextDate.getMonth() + 1)
 
-  res.status(201).json({ data: payment })
+  const updatedPayment = await prisma.recurringPayment.update({
+    where: { id: payment.id },
+    data: {
+      paidInstallments: 1,
+      nextDueDate: nextDate,
+      active: !isCompleted,
+    },
+    include: { category: true },
+  })
+
+  res.status(201).json({ data: updatedPayment })
 }
 
 export async function updateRecurringPayment(req: AuthRequest, res: Response): Promise<void> {
