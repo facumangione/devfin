@@ -55,6 +55,7 @@ async function processRecurringPayments() {
           date: installmentDate,
           userId: payment.userId,
           categoryId: payment.categoryId,
+          recurringPaymentId: payment.id,
         },
       })
 

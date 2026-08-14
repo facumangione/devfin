@@ -68,6 +68,7 @@ export async function createRecurringPayment(req: AuthRequest, res: Response): P
       date: startDate,
       userId,
       categoryId,
+      recurringPaymentId: payment.id,
     },
   })
 
@@ -114,6 +115,24 @@ export async function updateRecurringPayment(req: AuthRequest, res: Response): P
     },
     include: { category: true },
   })
+
+  // Sync the change onto the most recently generated transaction for this
+  // recurring payment (e.g. if the category or amount was corrected).
+  const lastTransaction = await prisma.transaction.findFirst({
+    where: { recurringPaymentId: id },
+    orderBy: { date: 'desc' },
+  })
+
+  if (lastTransaction && (rest.amount || rest.description || rest.type || rest.categoryId)) {
+    await prisma.transaction.update({
+      where: { id: lastTransaction.id },
+      data: {
+        ...(rest.amount !== undefined && { amount: rest.amount }),
+        ...(rest.type !== undefined && { type: rest.type }),
+        ...(rest.categoryId !== undefined && { categoryId: rest.categoryId }),
+      },
+    })
+  }
 
   res.json({ data: payment })
 }
