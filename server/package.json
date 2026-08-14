@@ -9,7 +9,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "email": "tsx src/email.ts",
+    "cron": "tsx src/cron.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
